@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/Matthew/SkyDrive/Documents/Eclipse Workspace/jsoup-1.7.3.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://jsoup.org/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Matthew/SkyDrive/Documents/Eclipse Workspace/jetty-distribution-9.2.3.v20140905/lib/websocket/websocket-client-9.2.3.v20140905.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://download.eclipse.org/jetty/stable-9/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Matthew/SkyDrive/Documents/Eclipse Workspace/jetty-distribution-9.2.3.v20140905/lib/jetty-io-9.2.3.v20140905.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://download.eclipse.org/jetty/stable-9/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Matthew/SkyDrive/Documents/Eclipse Workspace/jetty-distribution-9.2.3.v20140905/lib/jetty-util-9.2.3.v20140905.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://download.eclipse.org/jetty/stable-9/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Matthew/SkyDrive/Documents/Eclipse Workspace/jetty-distribution-9.2.3.v20140905/lib/websocket/websocket-api-9.2.3.v20140905.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://download.eclipse.org/jetty/stable-9/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Matthew/SkyDrive/Documents/Eclipse Workspace/jetty-distribution-9.2.3.v20140905/lib/websocket/websocket-common-9.2.3.v20140905.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://download.eclipse.org/jetty/stable-9/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Matthew/SkyDrive/Documents/Eclipse Workspace/json-simple-1.1.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
