@@ -283,23 +283,25 @@ public class Digibutter {
 		
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("Accept", "application/json, text/javascript, */*");
 		connection.setRequestProperty("Cookie", cookieString());
 		
 		connection.connect();
 		
 		String html = getHtml(connection);
+		log(html);
 		updateCookies(connection);
 		connection.disconnect();
 		
 		Topic output = new Topic();
-		Document doc = Jsoup.parse(html);
+		/*Document doc = Jsoup.parse(html);
 		output.id = topicId;
 		output.title = doc.getElementById("topic").getElementsByClass("title").get(0).ownText();
 		output.username = doc.getElementById("topic").getElementsByClass("date").get(0).getElementsByTag("a").get(0).getElementsByTag("span").get(0).ownText();
 		String date = doc.getElementById("topic").getElementsByClass("date").get(0).getElementsByTag("abbr").get(0).attr("title");
 		date = date.replaceAll(":(\\d\\d)$", "$1");
 		output.date = dateParser.parse(date);
-		output.message = doc.getElementById("topic").getElementsByClass("topicarea").get(0).getElementsByClass("body").get(0).html();
+		output.message = doc.getElementById("topic").getElementsByClass("topicarea").get(0).getElementsByClass("body").get(0).html();*/
 		
 		log("Done.");
 		return output;
