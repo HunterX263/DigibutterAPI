@@ -576,6 +576,42 @@ public class Digibutter {
 		
 		return chat;
 	}
+	
+	/**
+	 * Gets the usernames of the five newest users to join the site.
+	 * @return A list of usernames.
+	 * @throws IOException
+	 */
+	public ArrayList<String> getNewUsers() throws IOException
+	{
+		log("Getting latest users..");
+		ArrayList<String> output = new ArrayList<String>();
+		URL url = new URL("http://digibutter.nerr.biz/");
+		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("Cookie", cookieString());
+		
+		connection.connect();
+		
+		String html = getHtml(connection);
+		updateCookies(connection);
+		connection.disconnect();
+		
+		Document doc = Jsoup.parse(html);
+		Elements list = doc.getElementsByClass("yui-b").get(0).getElementsByClass("rightlist").get(3).getElementsByTag("li");
+		for (int loop = 0; loop < list.size() - 1; loop++)
+		{
+			Element link = list.get(loop).getElementsByTag("a").get(0);
+			String href = link.attr("href");
+			String[] splitString = href.split("/");
+			String newUsername = splitString[splitString.length - 1];
+			output.add(newUsername);
+		}
+		
+		return output;
+	}
 
 	/**
 	 * Get the output of the latest HTTP response.
