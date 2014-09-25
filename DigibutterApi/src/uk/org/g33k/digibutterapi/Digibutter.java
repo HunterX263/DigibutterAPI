@@ -217,6 +217,7 @@ public class Digibutter {
 		connection.connect();
 		
 		String html = getHtml(connection);
+		log(html);
 		updateCookies(connection);
 		connection.disconnect();
 		
@@ -237,6 +238,7 @@ public class Digibutter {
 			connection.connect();
 			
 			html = getHtml(connection);
+			log(html);
 			updateCookies(connection);
 			connection.disconnect();
 			
