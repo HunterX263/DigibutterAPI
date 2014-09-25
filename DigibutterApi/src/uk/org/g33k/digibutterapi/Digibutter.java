@@ -211,6 +211,7 @@ public class Digibutter {
 		
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("Accept", "application/json, text/javascript, */*");
 		connection.setRequestProperty("Cookie", cookieString());
 		
 		connection.connect();
@@ -230,6 +231,7 @@ public class Digibutter {
 			
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Accept", "application/json, text/javascript, */*");
 			connection.setRequestProperty("Cookie", cookieString());
 			
 			connection.connect();
@@ -241,7 +243,7 @@ public class Digibutter {
 			page--;
 		}
 		
-		Document doc = Jsoup.parse(html);
+		/*Document doc = Jsoup.parse(html);
 		Elements topics = doc.getElementById("topic-container").getElementsByClass("listtopic");
 		
 		for (int loop = 0; loop < topics.size() - 1; loop++)
@@ -260,7 +262,7 @@ public class Digibutter {
 			output.add(newTopic);
 		}
 		
-		log("Done.");
+		log("Done.");*/
 		return output;
 	}
 	
