@@ -211,7 +211,7 @@ public class Digibutter {
 		
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setRequestProperty("Accept", "application/json, text/javascript, */*");
+		connection.setRequestProperty("Accept", "application/json");
 		connection.setRequestProperty("Cookie", cookieString());
 		
 		connection.connect();
@@ -232,7 +232,7 @@ public class Digibutter {
 			
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			connection.setRequestProperty("Accept", "application/json, text/javascript, */*");
+			connection.setRequestProperty("Accept", "application/json");
 			connection.setRequestProperty("Cookie", cookieString());
 			
 			connection.connect();
