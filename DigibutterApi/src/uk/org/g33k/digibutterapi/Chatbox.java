@@ -217,7 +217,7 @@ public class Chatbox {
 					}
 					for (Entry<String, String> e : oldOnline.entrySet())
 					{
-						if (online.containsKey(e.getKey()))
+						if (online.containsKey(e.getKey()) == false)
 						{
 							for (LeaveListener l : leaveListeners)
 							{
