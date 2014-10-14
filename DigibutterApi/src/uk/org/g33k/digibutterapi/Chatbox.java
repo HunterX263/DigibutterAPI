@@ -35,6 +35,7 @@ public class Chatbox {
 	private boolean connected = false;
 	private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
 	private ArrayList<JoinListener> joinListeners = new ArrayList<JoinListener>();
+	private ArrayList<LeaveListener> leaveListeners = new ArrayList<LeaveListener>();
 	private boolean debug = false;
 	private HashMap<String, String> online = new HashMap<String, String>();
 	private HashMap<String, Date> lastSeen = new HashMap<String, Date>();
@@ -48,6 +49,11 @@ public class Chatbox {
 	public interface JoinListener
 	{
 		public void onJoin(String username);
+	}
+	
+	public interface LeaveListener
+	{
+		public void onLeave(String username);
 	}
 	
 	public Chatbox(String username, String avatar, String auth, boolean debug, String lastPath)
@@ -209,6 +215,16 @@ public class Chatbox {
 							}
 						}
 					}
+					for (Entry<String, String> e : oldOnline.entrySet())
+					{
+						if (online.containsKey(e.getKey()))
+						{
+							for (LeaveListener l : leaveListeners)
+							{
+								l.onLeave(e.getKey());
+							}
+						}
+					}
 					if (lastUpdated == true)
 					{
 						try {
@@ -279,6 +295,15 @@ public class Chatbox {
     public void addOnJoinListener(JoinListener toAdd)
     {
     	joinListeners.add(toAdd);
+    }
+    
+    /**
+     * Add a listener for the onLeave event.
+     * @param toAdd
+     */
+    public void addOnLeaveListener(LeaveListener toAdd)
+    {
+    	leaveListeners.add(toAdd);
     }
     
     /**
