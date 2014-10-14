@@ -34,6 +34,7 @@ public class Chatbox {
 	private final CountDownLatch closeLatch;
 	private boolean connected = false;
 	private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
+	private ArrayList<JoinListener> joinListeners = new ArrayList<JoinListener>();
 	private boolean debug = false;
 	private HashMap<String, String> online = new HashMap<String, String>();
 	private HashMap<String, Date> lastSeen = new HashMap<String, Date>();
@@ -42,6 +43,11 @@ public class Chatbox {
 	public interface MessageListener
 	{
 		public void onMessage(String username, String message);
+	}
+	
+	public interface JoinListener
+	{
+		public void onJoin(String username);
 	}
 	
 	public Chatbox(String username, String avatar, String auth, boolean debug, String lastPath)
@@ -197,6 +203,10 @@ public class Chatbox {
 						{
 							lastSeen.put(mUsername, current);
 							lastUpdated = true;
+							for (JoinListener j : joinListeners)
+							{
+								j.onJoin(mUsername);
+							}
 						}
 					}
 					if (lastUpdated == true)
@@ -260,6 +270,15 @@ public class Chatbox {
     public void addOnMessageListener(MessageListener toAdd)
     {
     	messageListeners.add(toAdd);
+    }
+    
+    /**
+     * Add a listener for the onJoin event.
+     * @param toAdd The listener to add.
+     */
+    public void addOnJoinListener(JoinListener toAdd)
+    {
+    	joinListeners.add(toAdd);
     }
     
     /**
