@@ -40,6 +40,8 @@ public class Chatbox {
 	private HashMap<String, String> online = new HashMap<String, String>();
 	private HashMap<String, Date> lastSeen = new HashMap<String, Date>();
 	private String lastPath;
+	private int closeCode;
+	private String closeReason;
 	
 	public interface MessageListener
 	{
@@ -119,6 +121,8 @@ public class Chatbox {
 	 */
 	@OnWebSocketClose
     public void onClose(int statusCode, String reason) {
+		closeCode = statusCode;
+		closeReason = reason;
         log("Connection closed: " + statusCode + " - " + reason);
         this.session = null;
         this.closeLatch.countDown();
@@ -322,6 +326,24 @@ public class Chatbox {
     public HashMap<String, Date> getLastSeen()
     {
     	return new HashMap<String, Date>(lastSeen);
+    }
+    
+    /**
+     * Returns the code for the last disconnect.
+     * @return The code ID.
+     */
+    public int getCloseCode()
+    {
+    	return closeCode;
+    }
+    
+    /**
+     * Returns the reason for the last disconnect.
+     * @return The reason string.
+     */
+    public String getCloseReason()
+    {
+    	return closeReason;
     }
     
     /**
