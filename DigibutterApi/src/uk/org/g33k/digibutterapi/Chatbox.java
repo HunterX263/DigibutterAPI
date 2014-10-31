@@ -34,14 +34,28 @@ public class Chatbox {
 	private final CountDownLatch closeLatch;
 	private boolean connected = false;
 	private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
+	private ArrayList<JoinListener> joinListeners = new ArrayList<JoinListener>();
+	private ArrayList<LeaveListener> leaveListeners = new ArrayList<LeaveListener>();
 	private boolean debug = false;
 	private HashMap<String, String> online = new HashMap<String, String>();
 	private HashMap<String, Date> lastSeen = new HashMap<String, Date>();
 	private String lastPath;
+	private int closeCode;
+	private String closeReason;
 	
 	public interface MessageListener
 	{
 		public void onMessage(String username, String message);
+	}
+	
+	public interface JoinListener
+	{
+		public void onJoin(String username);
+	}
+	
+	public interface LeaveListener
+	{
+		public void onLeave(String username);
 	}
 	
 	public Chatbox(String username, String avatar, String auth, boolean debug, String lastPath)
@@ -107,6 +121,8 @@ public class Chatbox {
 	 */
 	@OnWebSocketClose
     public void onClose(int statusCode, String reason) {
+		closeCode = statusCode;
+		closeReason = reason;
         log("Connection closed: " + statusCode + " - " + reason);
         this.session = null;
         this.closeLatch.countDown();
@@ -197,6 +213,20 @@ public class Chatbox {
 						{
 							lastSeen.put(mUsername, current);
 							lastUpdated = true;
+							for (JoinListener j : joinListeners)
+							{
+								j.onJoin(mUsername);
+							}
+						}
+					}
+					for (Entry<String, String> e : oldOnline.entrySet())
+					{
+						if (online.containsKey(e.getKey()) == false)
+						{
+							for (LeaveListener l : leaveListeners)
+							{
+								l.onLeave(e.getKey());
+							}
 						}
 					}
 					if (lastUpdated == true)
@@ -263,6 +293,24 @@ public class Chatbox {
     }
     
     /**
+     * Add a listener for the onJoin event.
+     * @param toAdd The listener to add.
+     */
+    public void addOnJoinListener(JoinListener toAdd)
+    {
+    	joinListeners.add(toAdd);
+    }
+    
+    /**
+     * Add a listener for the onLeave event.
+     * @param toAdd
+     */
+    public void addOnLeaveListener(LeaveListener toAdd)
+    {
+    	leaveListeners.add(toAdd);
+    }
+    
+    /**
      * Get the list of currently online users.
      * @return A list of usernames and their associated avatar IDs.
      */
@@ -278,6 +326,24 @@ public class Chatbox {
     public HashMap<String, Date> getLastSeen()
     {
     	return new HashMap<String, Date>(lastSeen);
+    }
+    
+    /**
+     * Returns the code for the last disconnect.
+     * @return The code ID.
+     */
+    public int getCloseCode()
+    {
+    	return closeCode;
+    }
+    
+    /**
+     * Returns the reason for the last disconnect.
+     * @return The reason string.
+     */
+    public String getCloseReason()
+    {
+    	return closeReason;
     }
     
     /**
