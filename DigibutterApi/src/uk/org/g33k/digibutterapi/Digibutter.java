@@ -600,7 +600,7 @@ public class Digibutter {
 		connection.disconnect();
 		
 		Document doc = Jsoup.parse(html);
-		Elements list = doc.getElementsByClass("yui-b").get(0).getElementsByClass("rightlist").get(3).getElementsByTag("li");
+		Elements list = doc.getElementById("bd").child(1).getElementsByClass("rightlist").get(3).getElementsByTag("li");
 		for (int loop = 0; loop < list.size() - 1; loop++)
 		{
 			Element link = list.get(loop).getElementsByTag("a").get(0);
