@@ -676,7 +676,7 @@ public class Digibutter {
 	{
 		if (debug == true)
 		{
-			System.out.println("[Digibutter][" + new Date().toString() + "] " + message);
+			System.out.println("[" + new Date().toString() + "] [API] " + message);
 		}
 	}
 	
