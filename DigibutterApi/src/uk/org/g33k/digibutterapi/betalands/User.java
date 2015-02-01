@@ -20,4 +20,8 @@ public class User {
 		this.vel = vel;
 		this.damage = damage;
 	}
+	
+	public User()
+	{
+	}
 }
