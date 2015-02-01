@@ -25,6 +25,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import uk.org.g33k.digibutterapi.betalands.Betalands;
+
 public class Digibutter {
 	private String username;
 	private String password;
@@ -32,7 +34,7 @@ public class Digibutter {
 	private Map<String, String> cookies = new HashMap<String, String>();
 	private boolean debug = false;
 	private SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-	private WebSocketClient chatClient;
+	private WebSocketClient betalandsClient;
 	
 	/**
 	 * Create a new Digibutter object.
@@ -559,13 +561,13 @@ public class Digibutter {
 		
 		String socketCode = result.split(":")[0];
 		
-		chatClient = new WebSocketClient();
+		betalandsClient = new WebSocketClient();
 		Chatbox chat = new Chatbox(getDisplayName(), getAvatarId(), getChatAuth(), debug, lastPath);
 		
-		chatClient.start();
+		betalandsClient.start();
 		URI socketUri = new URI("ws://nerr.biz:8080/socket.io/1/websocket/" + socketCode);
 		ClientUpgradeRequest request = new ClientUpgradeRequest();
-		chatClient.connect(chat, socketUri, request);
+		betalandsClient.connect(chat, socketUri, request);
 		log("Connecting to : " + socketUri);
 		int timeout = 10;
 		while (chat.isConnected() == false & timeout > 0)
@@ -575,6 +577,83 @@ public class Digibutter {
 		}
 		
 		return chat;
+	}
+	
+	/**
+	 * Connects to betalands.
+	 * @return The betalands object.
+	 * @throws Exception
+	 */
+	public Betalands getBetalands() throws Exception
+	{
+		return getBetalands(false);
+	}
+	
+	/**
+	 * Connects to betalands.
+	 * @param debug Set to true to enable debug messages.
+	 * @return The betalands object.
+	 * @throws Exception
+	 */
+	public Betalands getBetalands(boolean debug) throws Exception
+	{
+		return getBetalands(debug, null);
+	}
+	
+	/**
+	 * Connects to betalands.
+	 * @param lastPath The path for reading and writing last seen user data.
+	 * @return The betalands object.
+	 * @throws Exception
+	 */
+	public Betalands getBetalands(String lastPath) throws Exception
+	{
+		return getBetalands(false, lastPath);
+	}
+	
+	/**
+	 * Connects to betalands.
+	 * @param debug Set to true to enable debug messages.
+	 * @param lastPath The path for reading and writing last seen user data.
+	 * @return The betalands object.
+	 * @throws Exception
+	 */
+	public Betalands getBetalands(boolean debug, String lastPath) throws Exception
+	{
+		ensureLogin();
+		
+		Date d = new Date();
+		URL url = new URL("http://nerr.biz:8081/socket.io/1/?t=" + d.getTime());
+		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("Cookie", cookieString());
+		
+		connection.connect();
+		
+		String result = getHtml(connection);
+		updateCookies(connection);
+		connection.disconnect();
+		
+		String socketCode = result.split(":")[0];
+		
+		betalandsClient = new WebSocketClient();
+		Betalands bLands = new Betalands(getDisplayName(), getAvatarId(), getChatAuth(), debug, lastPath);
+		
+		betalandsClient.start();
+		URI socketUri = new URI("ws://nerr.biz:8081/socket.io/1/websocket/" + socketCode);
+		ClientUpgradeRequest request = new ClientUpgradeRequest();
+		betalandsClient.connect(bLands, socketUri, request);
+		log("Connecting to : " + socketUri);
+		int timeout = 10;
+		while (bLands.isConnected() == false & timeout > 0)
+		{
+			Thread.sleep(1000);
+			timeout--;
+		}
+		
+		return bLands;
 	}
 	
 	/**
@@ -686,9 +765,9 @@ public class Digibutter {
 	 */
 	public void dispose() throws Exception
 	{
-		chatClient.stop();
-		chatClient.destroy();
-		chatClient = null;
+		betalandsClient.stop();
+		betalandsClient.destroy();
+		betalandsClient = null;
 	}
 	
 	/**
