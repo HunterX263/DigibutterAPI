@@ -19,11 +19,13 @@ import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+@WebSocket
 public class Betalands {
 	private String username;
 	private String avatar;
@@ -393,13 +395,20 @@ public class Betalands {
      */
 	private void saveLastSeen(String path, HashMap<String, Date> lastSeen) throws FileNotFoundException
 	{
-		log("Saving last seen file.");
-		PrintWriter writer = new PrintWriter(path);
-		for (Entry<String, Date> e : lastSeen.entrySet())
+		if (path != null)
 		{
-			writer.println(e.getKey());
-			writer.println(e.getValue().getTime());
+			log("Saving last seen file.");
+			PrintWriter writer = new PrintWriter(path);
+			for (Entry<String, Date> e : lastSeen.entrySet())
+			{
+				writer.println(e.getKey());
+				writer.println(e.getValue().getTime());
+			}
+			writer.close();
 		}
-		writer.close();
+		else
+		{
+			log("Path is null, ignoring save command.");
+		}
 	}
 }

@@ -395,13 +395,20 @@ public class Chatbox {
      */
 	private void saveLastSeen(String path, HashMap<String, Date> lastSeen) throws FileNotFoundException
 	{
-		log("Saving last seen file.");
-		PrintWriter writer = new PrintWriter(path);
-		for (Entry<String, Date> e : lastSeen.entrySet())
+		if (path != null)
 		{
-			writer.println(e.getKey());
-			writer.println(e.getValue().getTime());
+			log("Saving last seen file.");
+			PrintWriter writer = new PrintWriter(path);
+			for (Entry<String, Date> e : lastSeen.entrySet())
+			{
+				writer.println(e.getKey());
+				writer.println(e.getValue().getTime());
+			}
+			writer.close();
 		}
-		writer.close();
+		else
+		{
+			log("Path is null, ignoring save command.");
+		}
 	}
 }
