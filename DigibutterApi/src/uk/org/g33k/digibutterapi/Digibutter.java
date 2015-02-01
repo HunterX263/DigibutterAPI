@@ -686,6 +686,7 @@ public class Digibutter {
 		String socketCode = result.split(":")[0];
 		
 		betalandsClient = new WebSocketClient();
+		betalandsClient.getPolicy().setMaxTextMessageSize(400000);
 		Betalands bLands = new Betalands(getDisplayName(), getAvatarId(), getBetalandsAuth(), debug, lastPath);
 		
 		betalandsClient.start();

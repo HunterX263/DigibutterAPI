@@ -11,8 +11,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.StatusCode;
@@ -169,7 +171,15 @@ public class Betalands {
         	try {
         		String jMsg = msg.substring(4);
 				JSONObject json = (JSONObject)new JSONParser().parse(jMsg);
-				if (json.get("name").equals("updatechat") | json.get("name").equals("refreshchat"))
+				if (json.get("name").equals("startgame"))
+				{
+					log("Starting change level.");
+					Future<Void> fut;
+		    		fut = session.getRemote().sendStringByFuture("5:::{\"name\":\"changelevel\",\"args\":[\"LevelTest\",\"LevelTest-" + username + "\"]}");
+		    		fut.get(2, TimeUnit.SECONDS);
+		    		log("Done.");
+				}
+				else if (json.get("name").equals("updatechat") | json.get("name").equals("refreshchat"))
 				{
 					JSONArray args = (JSONArray)json.get("args");
 					JSONObject object = (JSONObject)args.get(0);
@@ -240,6 +250,15 @@ public class Betalands {
 					}
 				}
 			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TimeoutException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
