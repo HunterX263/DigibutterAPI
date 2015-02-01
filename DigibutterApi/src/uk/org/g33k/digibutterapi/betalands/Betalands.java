@@ -281,6 +281,25 @@ public class Betalands {
     	}
     }
     
+    public void changeLevel(String room, String door)
+    {
+    	log("Changing to level " + room);
+		try {
+			Future<Void> fut;
+			fut = session.getRemote().sendStringByFuture("5:::{\"name\":\"changelevel\",\"args\":[\"" + room + "\",\"" + door + "\"]}");
+			fut.get(2, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
     /**
      * Close the chat box connection.
      * @param duration The maximum time to wait for the chat to close.
