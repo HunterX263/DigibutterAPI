@@ -503,6 +503,53 @@ public class Digibutter {
 	}
 	
 	/**
+	 * Gets the authentication code for betalands for the logged-in user.
+	 * @return The betalands authentication code.
+	 * @throws IOException
+	 */
+	private String getBetalandsAuth() throws IOException
+	{
+		ensureLogin();
+		
+		log("Getting Chatbox auth key...");
+		String output = "";
+		URL url = new URL("http://digibutter.nerr.biz/pages/betalands");
+		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("Cookie", cookieString());
+		
+		connection.connect();
+		
+		String html = getHtml(connection);
+		updateCookies(connection);
+		connection.disconnect();
+		
+		Document doc = Jsoup.parse(html);
+		Element body = doc.getElementById("fullbody");
+		Elements children = body.children();
+		String src = "";
+		for (Element e : children)
+		{
+			if (e.tagName().equalsIgnoreCase("a"))
+			{
+				src = e.attr("href");
+			}
+		}
+		log(src);
+		Pattern pattern = Pattern.compile("(?<=h\\=)\\w+");
+		Matcher matcher = pattern.matcher(src);
+		if (matcher.find())
+		{
+		    output = matcher.group();
+		}
+		
+		log("Done.");
+		return output;
+	}
+	
+	/**
 	 * Connects to the chatbox.
 	 * @return The chat box object.
 	 * @throws Exception
@@ -639,7 +686,7 @@ public class Digibutter {
 		String socketCode = result.split(":")[0];
 		
 		betalandsClient = new WebSocketClient();
-		Betalands bLands = new Betalands(getDisplayName(), getAvatarId(), getChatAuth(), debug, lastPath);
+		Betalands bLands = new Betalands(getDisplayName(), getAvatarId(), getBetalandsAuth(), debug, lastPath);
 		
 		betalandsClient.start();
 		URI socketUri = new URI("ws://nerr.biz:8081/socket.io/1/websocket/" + socketCode);
