@@ -1,5 +1,6 @@
 package uk.org.g33k.digibutterapi.betalands;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,7 +40,7 @@ public class Betalands {
 	private ArrayList<JoinListener> joinListeners = new ArrayList<JoinListener>();
 	private ArrayList<LeaveListener> leaveListeners = new ArrayList<LeaveListener>();
 	private boolean debug = false;
-	private HashMap<String, String> online = new HashMap<String, String>();
+	private ArrayList<User> online = new ArrayList<User>();
 	private HashMap<String, Date> lastSeen = new HashMap<String, Date>();
 	private String lastPath;
 	private int closeCode;
@@ -207,7 +208,7 @@ public class Betalands {
 				}
 				else if (json.get("name").equals("updateusers"))
 				{
-					HashMap<String, String> oldOnline = new HashMap<String, String>(online);
+					ArrayList<User> oldOnline = new ArrayList<User>(online);
 					online.clear();
 					Date current = new Date();
 					JSONArray array = (JSONArray)json.get("args");
@@ -215,10 +216,17 @@ public class Betalands {
 					boolean lastUpdated = false;
 					for (int loop = 0; loop < args.size(); loop++)
 					{
+						User newUser = new User();
 						JSONObject object = (JSONObject)args.get(loop);
-						String mUsername = (String)object.get("username");
-						String mAvatar = (String)object.get("avatar");
-						online.put(mUsername, mAvatar);
+						newUser.username = (String)object.get("username");
+						newUser.avatar = (String)object.get("avatar");
+						newUser.room = (String)object.get("room");
+						newUser.pos = new Point2D.Double((Double)object.get("player.pos.x"), (Double)object.get("player.pos.y"));
+						newUser.vel = new Point2D.Double((Double)object.get("player.vel.x"), (Double)object.get("player.vel.y"));
+						newUser.asleep = (Boolean)object.get("player.asleep");
+						newUser.damage = (Integer)object.get("player.damage");
+						online.add(newUser);
+						
 						if (oldOnline.containsKey(object.get("username")) == false)
 						{
 							lastSeen.put(mUsername, current);
