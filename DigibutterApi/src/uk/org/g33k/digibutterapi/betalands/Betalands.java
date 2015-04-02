@@ -227,23 +227,23 @@ public class Betalands {
 						newUser.damage = (Integer)object.get("player.damage");
 						online.add(newUser);
 						
-						if (oldOnline.containsKey(object.get("username")) == false)
+						if (oldOnline.contains(newUser.username) == false)
 						{
-							lastSeen.put(mUsername, current);
+							lastSeen.put(newUser.username, current);
 							lastUpdated = true;
 							for (JoinListener j : joinListeners)
 							{
-								j.onJoin(mUsername);
+								j.onJoin(newUser.username);
 							}
 						}
 					}
-					for (Entry<String, String> e : oldOnline.entrySet())
+					for (User u : oldOnline)
 					{
-						if (online.containsKey(e.getKey()) == false)
+						if (online.contains(u.username) == false)
 						{
 							for (LeaveListener l : leaveListeners)
 							{
-								l.onLeave(e.getKey());
+								l.onLeave(u.username);
 							}
 						}
 					}
@@ -360,9 +360,9 @@ public class Betalands {
      * Get the list of currently online users.
      * @return A list of usernames and their associated avatar IDs.
      */
-    public HashMap<String, String> getOnline()
+    public ArrayList<User> getOnline()
     {
-    	return new HashMap<String, String>(online);
+    	return new ArrayList<User>(online);
     }
     
     /**
