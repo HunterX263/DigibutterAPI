@@ -7,4 +7,12 @@ public class Game {
 
 	private int tileSize = 8;
 	private int[][] map;
+	
+	public void update()
+	{
+		for (Entity e : entities)
+		{
+			e.update();
+		}
+	}
 }
