@@ -29,7 +29,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 @WebSocket
-public class Betalands {
+public class Client {
 	private String username;
 	private String avatar;
 	private String auth;
@@ -61,7 +61,7 @@ public class Betalands {
 		public void onLeave(String username);
 	}
 	
-	public Betalands(String username, String avatar, String auth, boolean debug, String lastPath)
+	public Client(String username, String avatar, String auth, boolean debug, String lastPath)
 	{
 		this.username = username;
 		this.avatar = avatar;
@@ -80,7 +80,7 @@ public class Betalands {
 		}
 	}
 	
-	public Betalands(String username, String avatar, String auth, boolean debug)
+	public Client(String username, String avatar, String auth, boolean debug)
 	{
 		this.username = username;
 		this.avatar = avatar;
@@ -89,7 +89,7 @@ public class Betalands {
 		this.debug = debug;
 	}
 	
-	public Betalands(String username, String avatar, String auth)
+	public Client(String username, String avatar, String auth)
 	{
 		this.username = username;
 		this.avatar = avatar;

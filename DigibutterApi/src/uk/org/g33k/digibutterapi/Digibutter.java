@@ -25,7 +25,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import uk.org.g33k.digibutterapi.betalands.Betalands;
+import uk.org.g33k.digibutterapi.betalands.Client;
 
 public class Digibutter {
 	private String username;
@@ -631,7 +631,7 @@ public class Digibutter {
 	 * @return The betalands object.
 	 * @throws Exception
 	 */
-	public Betalands getBetalands() throws Exception
+	public Client getBetalands() throws Exception
 	{
 		return getBetalands(false);
 	}
@@ -642,7 +642,7 @@ public class Digibutter {
 	 * @return The betalands object.
 	 * @throws Exception
 	 */
-	public Betalands getBetalands(boolean debug) throws Exception
+	public Client getBetalands(boolean debug) throws Exception
 	{
 		return getBetalands(debug, null);
 	}
@@ -653,7 +653,7 @@ public class Digibutter {
 	 * @return The betalands object.
 	 * @throws Exception
 	 */
-	public Betalands getBetalands(String lastPath) throws Exception
+	public Client getBetalands(String lastPath) throws Exception
 	{
 		return getBetalands(false, lastPath);
 	}
@@ -665,7 +665,7 @@ public class Digibutter {
 	 * @return The betalands object.
 	 * @throws Exception
 	 */
-	public Betalands getBetalands(boolean debug, String lastPath) throws Exception
+	public Client getBetalands(boolean debug, String lastPath) throws Exception
 	{
 		ensureLogin();
 		
@@ -687,7 +687,7 @@ public class Digibutter {
 		
 		betalandsClient = new WebSocketClient();
 		betalandsClient.getPolicy().setMaxTextMessageSize(400000);
-		Betalands bLands = new Betalands(getDisplayName(), getAvatarId(), getBetalandsAuth(), debug, lastPath);
+		Client bLands = new Client(getDisplayName(), getAvatarId(), getBetalandsAuth(), debug, lastPath);
 		
 		betalandsClient.start();
 		URI socketUri = new URI("ws://nerr.biz:8081/socket.io/1/websocket/" + socketCode);
