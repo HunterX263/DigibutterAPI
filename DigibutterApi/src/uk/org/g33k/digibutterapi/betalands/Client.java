@@ -180,6 +180,22 @@ public class Client {
 		    		fut.get(2, TimeUnit.SECONDS);
 		    		log("Done.");
 				}
+				else if (json.get("name").equals("userleave"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("loadlevel"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("playerupdate"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("initposts"))
+				{
+					//TODO
+				}
 				else if (json.get("name").equals("updatechat") | json.get("name").equals("refreshchat"))
 				{
 					JSONArray args = (JSONArray)json.get("args");
@@ -205,6 +221,14 @@ public class Client {
 							m.onMessage(mUsername, message);
 						}
 					}
+				}
+				else if (json.get("name").equals("updatetopic"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("refreshchat"))
+				{
+					//TODO
 				}
 				else if (json.get("name").equals("updateusers"))
 				{
@@ -256,6 +280,34 @@ public class Client {
 							e.printStackTrace();
 						}
 					}
+				}
+				else if (json.get("name").equals("aup"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("additem"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("updateitem"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("gotitem"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("itemfetched"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("removeitem"))
+				{
+					//TODO
+				}
+				else if (json.get("name").equals("inputchange"))
+				{
+					//TODO
 				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
