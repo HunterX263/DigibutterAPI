@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -46,6 +48,9 @@ public class Client {
 	private int closeCode;
 	private String closeReason;
 	
+	private Timer t;
+	public boolean sendingPlayerPos = false;
+	
 	public interface MessageListener
 	{
 		public void onMessage(String username, String message);
@@ -78,6 +83,7 @@ public class Client {
 				e.printStackTrace();
 			}
 		}
+		t = new Timer();
 	}
 	
 	public Client(String username, String avatar, String auth, boolean debug)
@@ -187,6 +193,24 @@ public class Client {
 				else if (json.get("name").equals("loadlevel"))
 				{
 					//TODO
+					/*if (sendingPlayerPos == false)
+					{
+						t.scheduleAtFixedRate(
+								new TimerTask() {
+									public void run()
+									{
+										try {
+							        		Future<Void> fut;
+							        		fut = session.getRemote().sendStringByFuture("5:::{\"name\":\"playerpos\",\"args\":[{\"pos\":{\"x\":0,\"y\":450},\"vel\":{\"x\":0,\"y\":0},\"asleep\":false,\"gun\":\"\"}]}");
+							        		fut.get(2, TimeUnit.SECONDS);
+							        	} catch (Throwable t) {
+							        		t.printStackTrace();
+							        	}
+									}
+								},
+								0,
+								500);
+					}*/
 				}
 				else if (json.get("name").equals("playerupdate"))
 				{
@@ -245,10 +269,13 @@ public class Client {
 						newUser.username = (String)object.get("username");
 						newUser.avatar = (String)object.get("avatar");
 						newUser.room = (String)object.get("room");
-						newUser.pos = new Point2D.Double((Double)object.get("player.pos.x"), (Double)object.get("player.pos.y"));
-						newUser.vel = new Point2D.Double((Double)object.get("player.vel.x"), (Double)object.get("player.vel.y"));
-						newUser.asleep = (Boolean)object.get("player.asleep");
-						newUser.damage = (Integer)object.get("player.damage");
+						JSONObject oPlayer = (JSONObject)object.get("player");
+						JSONObject oPos = (JSONObject)oPlayer.get("pos");
+						//newUser.pos = new Point2D.Double((Double)oPos.get("x"), (Double)oPos.get("y"));
+						JSONObject oVel = (JSONObject)oPlayer.get("vel");
+						//newUser.vel = new Point2D.Double((Double)oVel.get("x"), (Double)oVel.get("y"));
+						newUser.asleep = false;
+						//newUser.damage = (Integer)object.get("damage");
 						online.add(newUser);
 						
 						if (oldOnline.contains(newUser.username) == false)
