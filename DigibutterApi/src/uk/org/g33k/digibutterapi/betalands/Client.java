@@ -30,6 +30,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import uk.org.g33k.digibutterapi.Chatbox.JoinListener;
+import uk.org.g33k.digibutterapi.Chatbox.LeaveListener;
+import uk.org.g33k.digibutterapi.betalands.entities.Player;
+
 @WebSocket
 public class Client {
 	private String username;
@@ -42,14 +46,13 @@ public class Client {
 	private ArrayList<JoinListener> joinListeners = new ArrayList<JoinListener>();
 	private ArrayList<LeaveListener> leaveListeners = new ArrayList<LeaveListener>();
 	private boolean debug = false;
-	private ArrayList<User> online = new ArrayList<User>();
+	private HashMap<String, String> online = new HashMap<String, String>();
 	private HashMap<String, Date> lastSeen = new HashMap<String, Date>();
 	private String lastPath;
 	private int closeCode;
 	private String closeReason;
 	
 	private Timer t;
-	public boolean sendingPlayerPos = false;
 	
 	public interface MessageListener
 	{
@@ -150,7 +153,6 @@ public class Client {
             Future<Void> fut;
             fut = session.getRemote().sendStringByFuture("5:::{\"name\":\"adduser\",\"args\":[\"" + username + "\",\"" + avatar + "\",\"" + auth + "\"]}");
             fut.get(2, TimeUnit.SECONDS);
-            connected = true;
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -193,7 +195,7 @@ public class Client {
 				else if (json.get("name").equals("loadlevel"))
 				{
 					//TODO
-					/*if (sendingPlayerPos == false)
+					if (connected == false)
 					{
 						t.scheduleAtFixedRate(
 								new TimerTask() {
@@ -210,7 +212,8 @@ public class Client {
 								},
 								0,
 								500);
-					}*/
+						connected = true;
+					}
 				}
 				else if (json.get("name").equals("playerupdate"))
 				{
@@ -256,7 +259,7 @@ public class Client {
 				}
 				else if (json.get("name").equals("updateusers"))
 				{
-					ArrayList<User> oldOnline = new ArrayList<User>(online);
+					HashMap<String, String> oldOnline = new HashMap<String, String>(online);
 					online.clear();
 					Date current = new Date();
 					JSONArray array = (JSONArray)json.get("args");
@@ -264,37 +267,27 @@ public class Client {
 					boolean lastUpdated = false;
 					for (int loop = 0; loop < args.size(); loop++)
 					{
-						User newUser = new User();
 						JSONObject object = (JSONObject)args.get(loop);
-						newUser.username = (String)object.get("username");
-						newUser.avatar = (String)object.get("avatar");
-						newUser.room = (String)object.get("room");
-						JSONObject oPlayer = (JSONObject)object.get("player");
-						JSONObject oPos = (JSONObject)oPlayer.get("pos");
-						//newUser.pos = new Point2D.Double((Double)oPos.get("x"), (Double)oPos.get("y"));
-						JSONObject oVel = (JSONObject)oPlayer.get("vel");
-						//newUser.vel = new Point2D.Double((Double)oVel.get("x"), (Double)oVel.get("y"));
-						newUser.asleep = false;
-						//newUser.damage = (Integer)object.get("damage");
-						online.add(newUser);
-						
-						if (oldOnline.contains(newUser.username) == false)
+						String mUsername = (String)object.get("username");
+						String mAvatar = (String)object.get("avatar");
+						online.put(mUsername, mAvatar);
+						if (oldOnline.containsKey(object.get("username")) == false)
 						{
-							lastSeen.put(newUser.username, current);
+							lastSeen.put(mUsername, current);
 							lastUpdated = true;
 							for (JoinListener j : joinListeners)
 							{
-								j.onJoin(newUser.username);
+								j.onJoin(mUsername);
 							}
 						}
 					}
-					for (User u : oldOnline)
+					for (Entry<String, String> e : oldOnline.entrySet())
 					{
-						if (online.contains(u.username) == false)
+						if (online.containsKey(e.getKey()) == false)
 						{
 							for (LeaveListener l : leaveListeners)
 							{
-								l.onLeave(u.username);
+								l.onLeave(e.getKey());
 							}
 						}
 					}
@@ -439,9 +432,9 @@ public class Client {
      * Get the list of currently online users.
      * @return A list of usernames and their associated avatar IDs.
      */
-    public ArrayList<User> getOnline()
+    public HashMap<String, String> getOnline()
     {
-    	return new ArrayList<User>(online);
+    	return new HashMap<String, String>(online);
     }
     
     /**
@@ -479,7 +472,7 @@ public class Client {
 	{
 		if (debug == true)
 		{
-			System.out.println("[Chatbox][" + new Date().toString() + "] " + message);
+			System.out.println("[Betalands][" + new Date().toString() + "] " + message);
 		}
 	}
     

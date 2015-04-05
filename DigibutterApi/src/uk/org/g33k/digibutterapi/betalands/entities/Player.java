@@ -1,5 +1,7 @@
 package uk.org.g33k.digibutterapi.betalands.entities;
 
-public class Player {
+import uk.org.g33k.digibutterapi.betalands.Entity;
 
+public class Player extends Entity{
+	public String username;
 }
